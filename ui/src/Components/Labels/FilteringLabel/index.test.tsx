@@ -3,13 +3,17 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import copy from "copy-to-clipboard";
 
 import { AlertStore, NewUnappliedFilter } from "Stores/AlertStore";
+import { Settings } from "Stores/Settings";
 
 import FilteringLabel from ".";
 
 let alertStore: AlertStore;
+let settingsStore: Settings;
 
 beforeEach(() => {
   alertStore = new AlertStore([]);
+  settingsStore = new Settings(null);
+  jest.clearAllMocks();
 });
 
 const renderFilteringLabel = (name: string, value: string) => {
@@ -20,6 +24,23 @@ const renderFilteringLabel = (name: string, value: string) => {
 
 const renderAndClick = (name: string, value: string, clickOptions?: any) => {
   const { container } = renderFilteringLabel(name, value);
+  const label = container.querySelector(".components-label");
+  fireEvent.click(label!, clickOptions || {});
+};
+
+const renderWithSettingsAndClick = (
+  name: string,
+  value: string,
+  clickOptions?: any,
+) => {
+  const { container } = render(
+    <FilteringLabel
+      alertStore={alertStore}
+      settingsStore={settingsStore}
+      name={name}
+      value={value}
+    />,
+  );
   const label = container.querySelector(".components-label");
   fireEvent.click(label!, clickOptions || {});
 };
@@ -63,6 +84,17 @@ describe("<FilteringLabel />", () => {
   it("calling onClick() while holding Shift key copies label value to clipboard", () => {
     renderAndClick("foo", "bar", { shiftKey: true });
     expect(copy).toHaveBeenCalledWith("bar");
+  });
+
+  it("calling onClick() while holding Shift+Alt sets multi-grid label when settingsStore is provided", () => {
+    renderWithSettingsAndClick("foo", "bar", { shiftKey: true, altKey: true });
+    expect(settingsStore.multiGridConfig.config.gridLabel).toBe("foo");
+  });
+
+  it("calling onClick() while holding Shift+Alt does nothing without settingsStore", () => {
+    renderAndClick("foo", "bar", { shiftKey: true, altKey: true });
+    expect(alertStore.filters.values).toHaveLength(0);
+    expect(copy).not.toHaveBeenCalled();
   });
 
   it("label with dark background color should have 'components-label-dark' class", () => {
