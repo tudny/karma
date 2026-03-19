@@ -5,6 +5,7 @@ import { observer } from "mobx-react-lite";
 import type { APIAlertGroupT } from "Models/APITypes";
 import { StaticLabels } from "Common/Query";
 import type { AlertStore } from "Stores/AlertStore";
+import type { Settings } from "Stores/Settings";
 import type { SilenceFormStore } from "Stores/SilenceFormStore";
 import FilteringLabel from "Components/Labels/FilteringLabel";
 import { RenderNonLinkAnnotation, RenderLinkAnnotation } from "../Annotation";
@@ -14,6 +15,7 @@ const GroupFooter: FC<{
   group: APIAlertGroupT;
   afterUpdate: () => void;
   alertStore: AlertStore;
+  settingsStore?: Settings;
   silenceFormStore: SilenceFormStore;
   showAnnotations?: boolean;
   showSilences?: boolean;
@@ -22,6 +24,7 @@ const GroupFooter: FC<{
   group,
   afterUpdate,
   alertStore,
+  settingsStore,
   silenceFormStore,
   showAnnotations = true,
   showSilences = true,
@@ -68,6 +71,7 @@ const GroupFooter: FC<{
           name={label.name}
           value={label.value}
           alertStore={alertStore}
+          settingsStore={settingsStore}
         />
       ))}
       {Object.keys(alertStore.data.upstreams.clusters).length > 1
@@ -77,6 +81,7 @@ const GroupFooter: FC<{
               name={StaticLabels.AlertmanagerCluster}
               value={cluster}
               alertStore={alertStore}
+              settingsStore={settingsStore}
             />
           ))
         : null}
@@ -85,6 +90,7 @@ const GroupFooter: FC<{
           name={StaticLabels.Receiver}
           value={group.receiver}
           alertStore={alertStore}
+          settingsStore={settingsStore}
         />
       ) : null}
       {showAnnotations

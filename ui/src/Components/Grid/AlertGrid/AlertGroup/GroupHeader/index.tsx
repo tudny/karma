@@ -2,6 +2,7 @@ import type { FC, MouseEvent } from "react";
 
 import type { APIAlertGroupT } from "Models/APITypes";
 import type { AlertStore } from "Stores/AlertStore";
+import type { Settings } from "Stores/Settings";
 import type { SilenceFormStore } from "Stores/SilenceFormStore";
 import FilteringLabel from "Components/Labels/FilteringLabel";
 import FilteringCounterBadge from "Components/Labels/FilteringCounterBadge";
@@ -15,6 +16,7 @@ const GroupHeader: FC<{
   setIsCollapsed: (isCollapsed: boolean) => void;
   group: APIAlertGroupT;
   alertStore: AlertStore;
+  settingsStore?: Settings;
   silenceFormStore: SilenceFormStore;
   themedCounters: boolean;
   setIsMenuOpen: (isOpen: boolean) => void;
@@ -24,6 +26,7 @@ const GroupHeader: FC<{
   setIsCollapsed,
   group,
   alertStore,
+  settingsStore,
   silenceFormStore,
   themedCounters,
   setIsMenuOpen,
@@ -67,6 +70,7 @@ const GroupHeader: FC<{
             name={label.name}
             value={label.value}
             alertStore={alertStore}
+            settingsStore={settingsStore}
           />
         ))}
       </span>

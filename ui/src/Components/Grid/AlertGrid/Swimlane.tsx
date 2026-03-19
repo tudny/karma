@@ -52,6 +52,7 @@ const Swimlane = ({
             name={grid.labelName}
             value={grid.labelValue}
             alertStore={alertStore}
+            settingsStore={settingsStore}
           />
         )}
       </span>

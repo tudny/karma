@@ -8,6 +8,7 @@ import type {
   APIAlertmanagerStateT,
 } from "Models/APITypes";
 import type { AlertStore } from "Stores/AlertStore";
+import type { Settings } from "Stores/Settings";
 import type { SilenceFormStore } from "Stores/SilenceFormStore";
 import { BorderClassMap } from "Common/Colors";
 import { StaticLabels } from "Common/Query";
@@ -24,6 +25,7 @@ const Alert: FC<{
   showOnlyExpandedAnnotations: boolean;
   afterUpdate: () => void;
   alertStore: AlertStore;
+  settingsStore?: Settings;
   silenceFormStore: SilenceFormStore;
   setIsMenuOpen: (isOpen: boolean) => void;
 }> = ({
@@ -33,6 +35,7 @@ const Alert: FC<{
   showOnlyExpandedAnnotations,
   afterUpdate,
   alertStore,
+  settingsStore,
   silenceFormStore,
   setIsMenuOpen,
 }) => {
@@ -114,6 +117,7 @@ const Alert: FC<{
           name={label.name}
           value={label.value}
           alertStore={alertStore}
+          settingsStore={settingsStore}
         />
       ))}
       {Object.keys(alertStore.data.upstreams.clusters).length > 1
@@ -125,6 +129,7 @@ const Alert: FC<{
                 name={StaticLabels.AlertmanagerCluster}
                 value={cluster}
                 alertStore={alertStore}
+                settingsStore={settingsStore}
               />
             ))
         : null}
@@ -133,6 +138,7 @@ const Alert: FC<{
           name={StaticLabels.Receiver}
           value={alert.receiver}
           alertStore={alertStore}
+          settingsStore={settingsStore}
         />
       ) : null}
       {alert.annotations
